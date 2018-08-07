@@ -1,0 +1,33 @@
+# Defines our Vagrant environment
+#
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  # create some node servers
+  # https://docs.vagrantup.com/v2/vagrantfile/tips.html
+  (1..1).each do |i|
+    config.vm.define "node#{i}" do |node|
+        node.vm.box = "centos/6"
+        node.vm.hostname = "node#{i}"
+        node.vm.network :private_network, ip: "10.0.15.2#{i}"
+        node.vm.network "forwarded_port", guest: 80, host: "808#{i}"
+        node.vm.provider "virtualbox" do |vb|
+          vb.memory = "256"
+        end
+    end
+  end
+
+  # create mgmt node
+  config.vm.define :ansible do |ansible_config|
+      ansible_config.vm.box = "centos/6"
+      ansible_config.vm.hostname = "ansible"
+      ansible_config.vm.network :private_network, ip: "10.0.15.10"
+      ansible_config.vm.provider "virtualbox" do |vb|
+        vb.memory = "256"
+      end
+      ansible_config.vm.provision :shell, path: "bootstrap-mgmt-centos.sh"
+  end
+
+end
