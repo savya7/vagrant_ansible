@@ -1,5 +1,5 @@
 # vagrant_Ansible
-Written By : Shrinidhi K S 
+Written By : Savya
 
 Use this to create a local vagrant envirnoment to test Ansible Playbooks. 
 
